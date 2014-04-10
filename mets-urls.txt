@@ -1,0 +1,16 @@
+
+
+http://brema.suub.uni-bremen.de/grenzboten/periodical/titleinfo/282158
+
+ganz oben:
+http://brema.suub.uni-bremen.de/grenzboten/oai/?verb=GetRecord&metadataPrefix=mets&mode=view&identifier=282158
+
+alle Jahrgänge:
+http://brema.suub.uni-bremen.de/grenzboten/oai/?verb=GetRecord&metadataPrefix=mets&identifier=282153&mode=view
+
+
+Beispiel-Jahrgang:
+http://brema.suub.uni-bremen.de/grenzboten/oai/?verb=GetRecord&metadataPrefix=mets&identifier=341831&mode=view
+
+Beispiel-Band:
+http://brema.suub.uni-bremen.de/grenzboten/oai/?verb=GetRecord&metadataPrefix=mets&identifier=157681&mode=view 
