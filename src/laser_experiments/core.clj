@@ -55,33 +55,41 @@
 (defn doc-from-url [url]
   (l/parse (:body (client/get url)) :parser :xml))
 
+; constant URL = top level METS file of the "Die Grenzboten"
+; Output = laser data structure
 (def start-document (doc-from-url "http://brema.suub.uni-bremen.de/grenzboten/oai/?verb=GetRecord&metadataPrefix=mets&identifier=282153"))
 
+; Input = laser select result ;  Output = List of URLs
 (defn get-href [mptr]
   (get-in mptr [:attrs :xlink:href]))
 
+; Input = laser data structure ;  Output = laser select result
 (defn mptr-query [doc]
   (l/select doc
             (l/and (l/element= :mets:mptr)
                    (l/attr= :loctype "URL"))))
 
+; somewhat like a MAIN routine ;  Output = List of URLs
 (def jg-urls (->> (mptr-query start-document)
                   rest
                   (map get-href)))
+; Input = List of URLs ;  Output = List of laser data structures
 (def jg-docs
   (map doc-from-url jg-urls))
 
-
-(defn get-band-urls [jg-doc]
+; Input =  ;  Output =
+(defn get-volume-urls [jg-doc]
   (->> (mptr-query jg-doc)
        rest
        rest
        (map get-href)))
 
-(def band-doc (doc-from-url (first (get-band-urls jg-doc))))
+; Input =  ;  Output =
+(def volume-doc (doc-from-url (first (get-volume-urls jg-doc))))
 
-(defn band-docs [jg]
-  (map doc-from-url (get-band-urls jg)))
+; Input =  ;  Output =
+(defn volume-docs [jg]
+  (map doc-from-url (get-volume-urls jg)))
 
 (defn get-label [node]
   (get-in node [:attrs :label]))
@@ -89,13 +97,13 @@
 (defn select-article [doc]
   (l/select doc (l/element= :mets:div) (l/attr= :type "article")))
 
-(defn get-articles [band]
-  (->> ( select-article band)
+(defn get-articles [volume]
+  (->> ( select-article volume)
        ( map get-label)))
 
 (def articles
   (flatten
    (for [jg jg-docs
-         band (band-docs jg)
+         volume (volume-docs jg)
          ]
-     (get-articles band))))
+     (get-articles volume))))
