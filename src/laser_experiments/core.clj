@@ -69,7 +69,7 @@
             (l/and (l/element= :mets:mptr)
                    (l/attr= :loctype "URL"))))
 
-; somewhat like a MAIN routine ;  Output = List of URLs
+; quasi-Input = function call with constant URL ;  Output = List of URLs
 (def jg-urls (->> (mptr-query start-document)
                   rest
                   (map get-href)))
@@ -77,30 +77,33 @@
 (def jg-docs
   (map doc-from-url jg-urls))
 
-; Input =  ;  Output =
+; Input = laser data structure ;  Output = List of URLs
 (defn get-volume-urls [jg-doc]
   (->> (mptr-query jg-doc)
        rest
        rest
        (map get-href)))
 
-; Input =  ;  Output =
-(def volume-doc (doc-from-url (first (get-volume-urls jg-doc))))
-
-; Input =  ;  Output =
+; Input = ??? ;  Output = List of laser data structures
 (defn volume-docs [jg]
   (map doc-from-url (get-volume-urls jg)))
 
+; Input = <der Output von select-article !?!?> ;   Output = Ein Kapitel-Titel !?
 (defn get-label [node]
   (get-in node [:attrs :label]))
 
+; Input = laser data structure ;   Output = laser select result
 (defn select-article [doc]
   (l/select doc (l/element= :mets:div) (l/attr= :type "article")))
 
+; Input = laser data structure ;   Output = list of <Kapitel Titel>
 (defn get-articles [volume]
   (->> ( select-article volume)
        ( map get-label)))
 
+; somewhat like a MAIN routine ;  Output = List of <Kapitel Titel>
+; Die for-function ist ein 2-fach kartesisches Produkt ueber alle Jahrgaenge und
+; die zugehoerigen volumes.
 (def articles
   (flatten
    (for [jg jg-docs
