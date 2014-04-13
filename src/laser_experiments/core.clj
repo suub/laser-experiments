@@ -50,7 +50,8 @@
 (sort (reduce concat (map  #(split % #"\s") (map #(get-in % [:attrs :label]) res))))
 (distinct  (sort (reduce concat (map  #(split % #"\s") (map #(get-in % [:attrs :label]) res)))))
 
-
+; -----------------------------------------------------
+;          v---- METS files crawler ----v
 ; -----------------------------------------------------
 (defn doc-from-url [url]
   (l/parse (:body (client/get url)) :parser :xml))
@@ -106,9 +107,23 @@
 ; die zugehoerigen volumes.
 ;; Tipp: Der Aufruf zu flatten ist hier unnötig wenn man die for schleife zum
 ;; 3-fachen kartesischen Produkt umwandelt
+;;; ok - siehe unten - articles2 ... hat aber eine Exception geschmissen ...
 (def articles
   (flatten
    (for [jg jg-docs
          volume (volume-docs jg)
          ]
      (get-articles volume))))
+
+; test: Ist "jg-docs" ein "function call" ohne runde Klammern?
+      ; (for [jg jg-docs] jg)
+; ... oops - das hat viel ausgegeben  :-|   ... fast 9 Mio. Zeilen
+; Ergebnis: ja, es ist ein "function call" ohne runde Klammern
+
+(def articles2
+  (for [jg jg-docs
+        volume (volume-docs jg)
+        article (get-articles volume)
+        ]
+    article))
+; ClassCastException clojure.lang.LazySeq cannot be cast to clojure.lang.IFn  laser-experiments.core/eval5037 (NO_SOURCE_FILE:1)
