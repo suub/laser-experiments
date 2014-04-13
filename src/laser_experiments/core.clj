@@ -12,9 +12,10 @@
             [me.raynes.laser :as l])
   (:use [clojure.java.io :only [file]]))
 
-#_(def f (clojure.java.io/file "/home/mn/clojure/laser/METS-Formateproblem/export_mets_AUS__urn+nbn+de+gbv+46+1-908-VL282158_20130802T124213__VOM_2013-08-02.xml" ))
+;;sorgt dafür, dass alles ausgegeben wird
+(set! *print-length* nil)
 
-(def f (clojure.java.io/file "/home/kima/METS-Formateproblem/export_mets_AUS__urn+nbn+de+gbv+46+1-908-VL282158_20130802T124213__VOM_2013-08-02.xml"))
+(def f (clojure.java.io/file "/home/mn/clojure/laser/METS-Formateproblem/export_mets_AUS__urn+nbn+de+gbv+46+1-908-VL282158_20130802T124213__VOM_2013-08-02.xml" ))
 
 ; f parsen --> document erstellen
 (def d (l/parse f :parser :xml))
