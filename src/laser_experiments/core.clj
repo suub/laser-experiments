@@ -104,6 +104,8 @@
 ; somewhat like a MAIN routine ;  Output = List of <Kapitel Titel>
 ; Die for-function ist ein 2-fach kartesisches Produkt ueber alle Jahrgaenge und
 ; die zugehoerigen volumes.
+;; Tipp: Der Aufruf zu flatten ist hier unnötig wenn man die for schleife zum
+;; 3-fachen kartesischen Produkt umwandelt
 (def articles
   (flatten
    (for [jg jg-docs
