@@ -12,7 +12,9 @@
             [me.raynes.laser :as l])
   (:use [clojure.java.io :only [file]]))
 
-(def f (clojure.java.io/file "/home/mn/clojure/laser/METS-Formateproblem/export_mets_AUS__urn+nbn+de+gbv+46+1-908-VL282158_20130802T124213__VOM_2013-08-02.xml" ))
+#_(def f (clojure.java.io/file "/home/mn/clojure/laser/METS-Formateproblem/export_mets_AUS__urn+nbn+de+gbv+46+1-908-VL282158_20130802T124213__VOM_2013-08-02.xml" ))
+
+(def f (clojure.java.io/file "/home/kima/METS-Formateproblem/export_mets_AUS__urn+nbn+de+gbv+46+1-908-VL282158_20130802T124213__VOM_2013-08-02.xml"))
 
 ; f parsen --> document erstellen
 (def d (l/parse f :parser :xml))
@@ -119,7 +121,11 @@
       ; (for [jg jg-docs] jg)
 ; ... oops - das hat viel ausgegeben  :-|   ... fast 9 Mio. Zeilen
 ; Ergebnis: ja, es ist ein "function call" ohne runde Klammern
-
+;; Nein, es ist kein "function call" ohne runde Klammern, in clojure gibt es
+;; das nicht. jd-docs ist eine Variable, die eine Sequenz enthält, deshalb
+;; klappt das hier. Für ein function call hätte man (jg-docs) schreiben müssen
+;; Das ist auch ein Vorteil von clojure, dass man diese Fälle immer ganz einfach
+;; unterscheiden kann.
 (def articles2
   (for [jg jg-docs
         volume (volume-docs jg)
@@ -127,3 +133,9 @@
         ]
     article))
 ; ClassCastException clojure.lang.LazySeq cannot be cast to clojure.lang.IFn  laser-experiments.core/eval5037 (NO_SOURCE_FILE:1)
+;;Das ist genau die version, an die ich gedacht habe!
+;;Bei mir funktioniert sie auch problemlos.
+;;Es kann sein, dass bei dir irgendwas an definitionen von der repl übrig war und
+;;das gestört hat. Ich habe den Test hinzugefügt. Wenn keine Exception beim Laden
+;;der Datei geworfen wird, funktioniert articles2
+(doall (map #(assert (= %1 %2)) (take 1000 articles) (take 1000 articles2)))
