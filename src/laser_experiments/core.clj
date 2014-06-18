@@ -140,3 +140,15 @@
 ;;das gestört hat. Ich habe den Test hinzugefügt. Wenn keine Exception beim Laden
 ;;der Datei geworfen wird, funktioniert articles2
 (doall (map #(assert (= %1 %2)) (take 1000 articles) (take 1000 articles2)))
+
+
+(defn text-from-link [link]
+  (as-> link x
+        (doc-from-url x)
+        (l/select x (l/element= :charparams))
+        (map :content x)
+        (flatten x)
+        (apply str x)))
+
+(defn abby-plaintext [vlid]
+  (text-from-link (str "http://brema.suub.uni-bremen.de/grenzboten/download/fulltext/fr/" vlid)))
